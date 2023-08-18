@@ -1,10 +1,12 @@
 import requests
+from tgbot.config import load_config
 
 
-def scanning(url_photo: str):
+async def scanning(url_photo: str):
+    config = load_config(".env")
     url = 'https://pen-to-print-handwriting-ocr.p.rapidapi.com/recognize/'
     headers = {
-        'X-RapidAPI-Key': 'f3aef16d90msh4a9bf5cbd17468ep1c1434jsn4abd1443e3d5',
+        'X-RapidAPI-Key': f'{config.apis.pen_to_text_api}',
         'X-RapidAPI-Host': 'pen-to-print-handwriting-ocr.p.rapidapi.com',
     }
 
@@ -18,7 +20,7 @@ def scanning(url_photo: str):
 
     try:
         response = requests.post(url, headers=headers, data=data, files=files)
-        answer = response.json()
-        return answer['value']
+        answer = await response.json()
+        await answer['value']
     except requests.exceptions.RequestException as error:
         return error

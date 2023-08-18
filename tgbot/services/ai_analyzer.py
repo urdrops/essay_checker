@@ -1,8 +1,10 @@
 import openai
+from tgbot.config import load_config
 
 
 def analyzes(type1: str, topic: str, essay: str):
-    openai.api_key = "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"
+    config = load_config(".env")
+    openai.api_key = f"{config.apis.openai_api}"
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",

@@ -23,9 +23,16 @@ class Miscellaneous:
 
 
 @dataclass
+class APIs:
+    openai_api: str
+    pen_to_text_api: str
+
+
+@dataclass
 class Config:
     tg_bot: TgBot
     db: DbConfig
+    apis: APIs
     misc: Miscellaneous
 
 
@@ -44,5 +51,8 @@ def load_config(path: str = None):
             user=env.str("DB_USER"),
             database=env.str("DB_NAME")
         ),
+        apis=APIs(openai_api=env.str("OPENAI_API"),
+                  pen_to_text_api=env.str("PEN_TO_TEXT_API")
+                  ),
         misc=Miscellaneous()
     )

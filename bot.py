@@ -7,15 +7,15 @@ from aiogram.contrib.fsm_storage.redis import RedisStorage2
 from tgbot.config import load_config
 # cycle of polling
 from tgbot.handlers.start import register_start_user
-from tgbot import register_start_collect
-from tgbot import register_essay_topic
-from tgbot import register_essay
-from tgbot import register_scan
-from tgbot import register_error_handler
-from tgbot import register_get_feedback
-from tgbot import register_result_handler
+from tgbot.handlers.core_algorithm.essay_type import register_start_collect
+from tgbot.handlers.core_algorithm.essay_topic import register_essay_topic
+from tgbot.handlers.core_algorithm.essay_body import register_essay
+from tgbot.handlers.core_algorithm.scan import (register_scan)
+from tgbot.handlers.errors import register_error_handler
+from tgbot.handlers.core_algorithm.feedback import register_get_feedback
+from tgbot.handlers.core_algorithm.result import register_result_handler
 # commands
-from tgbot import register_instruction_handler
+from tgbot.handlers.help import register_instruction_handler
 
 
 logger = logging.getLogger(__name__)
