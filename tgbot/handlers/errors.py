@@ -1,5 +1,5 @@
 from aiogram import Dispatcher
-from aiogram.types import Message, Update
+from aiogram.types import Message, Update, CallbackQuery
 import logging
 
 
@@ -56,4 +56,3 @@ def register_error_handler(dp: Dispatcher):
     dp.register_message_handler(error_handler, state="*", content_types="photo")
     dp.register_message_handler(error_handler, state="*", content_types="animation")
     dp.register_message_handler(errors_handler)
-

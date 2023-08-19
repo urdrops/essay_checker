@@ -9,17 +9,15 @@ async def scan_inline_topic(callback_query: CallbackQuery):
     # analyze callback scan
     await callback_query.message.answer_video(
         video="BAACAgIAAxkBAAIYXWTZB8eebfgI82hc_9BNGkcYnGxOAALvMwAC1lzISuM8j32ADkzUMAQ",
-        caption='⬆️<b> Example </b>⬆️'
-                '\n<b>Submit your <i>QUESTION</i> following these rules!</b>\n\n'
-                '<b>📋Rules:\n</b>'
-                "\n• Your QUESTION must be completely on one photo, the bot scans only 1 photo❗️"
-                "\n• Make sure that there are no other texts on the photo except for the question❗️"
-                "\n• Your photo must be vertical❗️"
-                "\n• Make sure the quality of the photo is normal and readable❗️\n\n"         
-                
-                
+        caption='⬆️<b> Illustration </b>⬆️'
+                '\nSubmit your <i>QUESTION</i> as per these rules!\n\n'
+                '<b>📋Rules:\n'
+                "\n• <u>One photo - one QUESTION</u>"
+                "\n• <u>The photo should be vertical</u>"
+                "\n• <u>Only the QIESTION should be on the photo, no other texts</u>"
+                "\n• <u>Photo quality should be normal and readable\n\n</u></b>"         
                 "<b>💡Advice:</b>\n"
-                "\n• Without any strikethrough text",
+                "\n•<i> Without any strikethrough text</i>",
         reply_markup=ReplyKeyboardRemove())
     # delete previous callback
     await callback_query.message.delete()
@@ -35,7 +33,11 @@ async def scan_photo_topic(message: Message, state: FSMContext):
         data["photo_url"] = photo_url
     # to be sure
     await message.answer_photo(message.photo[-1].file_id,
-                               caption="[your input photo]\n\n<b>Сlick next to continue or resend photo:</b>",
+                               caption="Ensure the photo follows these rules:"
+                                       "\n1. Vertical orientation."
+                                       "\n2. Only the question text on the photo."
+                                       "\n3. Clear and readable quality."
+                                       "\n\n<b>Click next to continue or resend photo:</b>",
                                reply_markup=check_photo_top)
 
 
@@ -66,7 +68,7 @@ async def essay_topic_handler(callback_query: CallbackQuery, state: FSMContext):
     # question for essay body
     await callback_query.message.answer_video(
         video="BAACAgIAAxkBAAIWNWTYxsY2-z8sJNfqL1fpTNMsl81GAAIqMQAC1lzISj6BdA60x97sMAQ",
-        caption='⬆️<b> Example </b>⬆️\n'
+        caption='⬆️<b> Illustration </b>⬆️\n'
                 "<b>Now, please provide your <i>ESSAY</i></b>:\n\n"
                 "We offer two text upload options:\n<i>• Paste the text\n• Scan text from a photo</i>\n\n"
                 '<b>Enter your text:</b>',

@@ -1,29 +1,50 @@
+import aiohttp
 import openai
+
 from tgbot.config import load_config
 
 
-def analyzes(type1: str, topic: str, essay: str):
+async def analyzes(type1: str, topic: str, essay: str):
+    ielts_prompt = """
+You will be provided with IETLS writing task 2 from user. Your task is to analyze the provided essay for IELTS Writing Task 2 considering the following evaluation sections: **Task Response, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy.** Evaluate each section on a scale of 1 to 9, provide brief feedback, and indicate examples from the essay.
+
+Pattern: 
+
+<b>Evaluation and Feedback:</b>
+
+1. <b>Task Response:</b> [Rating and Feedback]
+2. <b>Coherence and Cohesion:</b> [Rating and Feedback]
+3. <b>Lexical Resource:</b> [Rating and Feedback]
+4. <b>Grammatical Range and Accuracy:</b> [Rating and Feedback]
+
+<b>Overall:</b>[Score]
+
+<b>Mistakes:</b>
+(show mistakes from the essay)
+
+<b>Improvement Recommendations:</b>
+(provide concise recommendations based on identified errors and shortcomings, with brief examples.)"""
+
     config = load_config(".env")
     openai.api_key = f"{config.apis.openai_api}"
 
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
-        messages=[
-            {
-                "role": "system",
-                "content": "You will be provided with IETLS writing task 2. Your task is conduct a thorough analysis of the presented essay in line with the evaluation criteria of IELTS Writing Task 2. For each of the four specified criteria: <b>Task Achievement</b>, <b>Coherence and Cohesion</b>, <b>Lexical Resource</b>, and <b>Grammatical Range and Accuracy</b>, provide a score from 0 to 9 and justify it with examples from the text. Additionally, highlight the strengths of the work and provide constructive feedback on potential areas for improvement.\n\nPattern:\n\n<b>Feedback:</b>\n- <b>Task Achievement:</b> Score: X with float. Example: Your response doesn't fully cover all aspects of the topic. For instance, in point Y, you could have included more in-depth arguments.\n- <b>Coherence and Cohesion:</b> Score: X with float. Example: Your text is easily readable, but the paragraph structure in point Z could be more consistent.\n- <b>Lexical Resource:</b> Score: X with float. Example: Your vocabulary is impressive; however, using specific terms in point W could enhance your argumentation.\n- <b>Grammatical Range and Accuracy:</b> Score: X with float. Example: Your grammar is generally good, but in sentence V, pay attention to the correct use of tenses.(Underlined error: \"needs\" should be \"need\".)\n\n**Overall:**Score: X with float. Example: Your score is that because..\n\n**Strengths:**\nCompelling arguments in point A, a good flow of ideas in point B.\n\n**Areas for Improvement:**\nDeeper analysis in point C, maintaining consistency in point D.\n\nPlease use this analysis to further develop your writing skills.\n\nThank you for your work on the essay!"
+    async with (aiohttp.ClientSession() as session):
+        response = await session.post(
+            url="https://api.openai.com/v1/chat/completions",
+            json={
+                "model": "gpt-3.5-turbo-16k",
+                "messages": [
+                    {"role": "system", "content": ielts_prompt},
+                    {"role": "user", "content": f"Question:\"{topic}\"\nAnswer:\"{essay}\""}
+                ],
+                "temperature": 0,
+                "max_tokens": 800,
+                "top_p": 1,
+                "frequency_penalty": 0,
+                "presence_penalty": 0
             },
-            {
-                "role": "user",
-                "content": f"Question:\"{topic}\"\n\nAnswer:\"{essay}\""
-            }
-        ],
-        temperature=0,
-        max_tokens=1300,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
-    )
+            headers={"Authorization": f"Bearer {openai.api_key}"}
 
-    return response.choices[0].message.content
-
+        )
+    response_data = await response.json()
+    return response_data['choices'][0]['message']['content']

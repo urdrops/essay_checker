@@ -1,23 +1,41 @@
+import asyncio
 from aiogram import Dispatcher
 from aiogram.types import CallbackQuery
 from aiogram.dispatcher import FSMContext
 from tgbot.misc.states import CollectInfoEss
 from tgbot.keyboards.inline import stars
+from tgbot.services.ai_analyzer import analyzes
 
 
 async def result_handler(callback_query: CallbackQuery, state: FSMContext):
     # delete previous message
     await callback_query.message.delete()
     # give to AI to analyze and wait in wait-list
-    stick_wait = await callback_query.message.answer_sticker(sticker="CAACAgIAAxkBAAEKAtlk2RjajYG3KYL6jRVh2Dg0z6srlwACihYAAqe_qEl5G6cHKF2I9zAE")
+    sticker = "CAACAgIAAxkBAAEKAtlk2RjajYG3KYL6jRVh2Dg0z6srlwACihYAAqe_qEl5G6cHKF2I9zAE"
+    stick_wait = await callback_query.message.answer_sticker(sticker=sticker)
     wait = await callback_query.message.answer(text="Wait a minute.. AI analyzes your essay..")
     # get data
     data = await state.get_data()
-    type1 = data.get('type')
-    topic = data.get('topic')
-    essay = data.get('essay')
+    info: dict = {"type": data.get('type'),
+                  "topic": data.get('topic'),
+                  "essay": data.get('essay')}
+
     # return result
-    await callback_query.message.answer(text=f"answer")#{analyzes(type1, topic, essay)}
+    data_result: str = await analyzes(info['type'], info['topic'], info['essay'])
+
+    # to avoid too long message error
+    if len(data_result) >= 4010:
+        a = 4008  # minus 2 from limit
+        endlist = [". ", "! ", "? ", "\" ", ".\n", "\"\n", "!\n", "?\n", ".\n"]
+        while not (data_result[a:a + 2] in endlist):
+            a -= 1
+        a += 1
+        await callback_query.message.answer(text=data_result[:a])
+        await callback_query.message.answer(text=data_result[a + 1:])
+    else:
+        await callback_query.message.answer(text=data_result)
+
+    # clear waiting notification
     await stick_wait.delete()
     await wait.delete()
     # ask feedback

@@ -13,14 +13,14 @@ async def scanning(url_photo: str):
     data = {
         'Session': 'string',
     }
-    response = requests.get(url_photo)
+    img = requests.get(url_photo)
     files = {
-        'srcImg': response.content,
+        'srcImg': img.content,
     }
 
     try:
         response = requests.post(url, headers=headers, data=data, files=files)
-        answer = await response.json()
-        await answer['value']
+        answer = response.json()
+        return answer['value']
     except requests.exceptions.RequestException as error:
-        return error
+        return str(error)

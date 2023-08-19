@@ -12,12 +12,12 @@ async def essay_type_handler(message: Message, state: FSMContext):
     async with state.proxy() as data:
         data["type"] = answer
     # show answer and question for next
-    await message.answer(text="<b>During the poll, commands like \n[/help, /contacts] don't work! </b>")
     await message.answer(text=f"<b>All right!✅ \nYou've chosen <u><i>{answer}</i></u></b>!\n",
                          reply_markup=back)
+
     # question for topic essay
     await message.answer_video(video="BAACAgIAAxkBAAIWNWTYxsY2-z8sJNfqL1fpTNMsl81GAAIqMQAC1lzISj6BdA60x97sMAQ",
-                               caption="⬆️<b> Example </b>⬆️\n"
+                               caption="⬆<b> Illustration </b>⬆\n"
                                        'Now, please provide <b>the QUESTION</b> of your writing essay.\n\n'
                                        "We offer two text upload options:\n"
                                        "<i>• Paste the text\n• Scan text from a photo</i>"

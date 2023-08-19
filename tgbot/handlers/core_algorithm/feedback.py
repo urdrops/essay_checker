@@ -6,7 +6,7 @@ from aiogram.types import CallbackQuery
 async def get_feedback(callback_query: CallbackQuery):
     await callback_query.message.delete()
     await callback_query.message.answer(text='Thanks for the feedback!' 
-                                             '\nClick [/start] to analyze more!')
+                                             '\nClick [/analyze] to analyze more!')
 
 
 # register feedback

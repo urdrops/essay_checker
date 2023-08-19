@@ -9,18 +9,16 @@ async def scan_inline_essay(callback_query: CallbackQuery):
     # analyze callback scan
     await callback_query.message.answer_video(
         video="BAACAgIAAxkBAAIYXWTZB8eebfgI82hc_9BNGkcYnGxOAALvMwAC1lzISuM8j32ADkzUMAQ",
-        caption='⬆️<b> Example </b>⬆️'
-                '\n<b>Submit your <i>ESSAY</i> following these rules!</b>\n\n'
-                '<b>📋Rules:\n</b>'
-                "\n• Your essay must be completely on one photo, the bot scans only 1 photo❗️"
-                "\n• Make sure that there are no other texts on the photo except for the essay❗️"
-                "\n• Your photo must be vertical❗️"
-                "\n• Make sure the quality of the photo is normal and readable❗️\n\n"
-
-
+        caption="⬆<b> Illustration </b>⬆"
+                '\n"Submit your <i>ESSAY</i> as per these rules!"\n\n'
+                '<b>📋Rules:\n'
+                "\n• One photo - one ESSAY"
+                "\n• The photo should be vertical"
+                "\n• Only the ESSAY should be on the photo, no other texts"
+                "\n• Photo quality should be normal and readable\n\n</b>"
                 "<b>💡Advice:</b>\n"
-                "\n• Preferably your essay should be clean and on a white sheet"
-                "\n• Without any strikethrough text",
+                "\n• <i>Preferably your essay should be clean and on a white sheet</i>"
+                "\n• <i>Without any strikethrough text</i>",
         reply_markup=ReplyKeyboardRemove())
     await callback_query.message.delete()
     # next state
@@ -35,21 +33,27 @@ async def scan_photo_essay(message: Message, state: FSMContext):
         data["photo_url"] = photo_url
     # to be sure
     await message.answer_photo(message.photo[-1].file_id,
-                               caption="[your input photo]\n\n<b>Click next to continue or resend photo:</b>",
+                               caption="Ensure the photo follows these rules:"
+                                       "\n1. Vertical orientation."
+                                       "\n2. Only the essay text on the photo."
+                                       "\n3. Clear and readable quality."
+                                       "\n\n<b>Click next to continue or resend photo:</b>",
                                reply_markup=check_photo_ess)
-
 
 
 async def continue_essay(message: Message, state: FSMContext):
     # analyze answer essay body
     answer = message.text
-    async with state.proxy() as data:
-        data["essay"] = answer
-    # to be sure
-    await message.answer(text=f"<b>Your entered  Essay:</b>\n\n\"<i>{answer}</i>\"\n\n"
-                              "<b>Click next to continue or resend text:</b>", reply_markup=check_text_ess)
-    # next state
-    await CollectInfoEss.Essay_state.set()
+    if len(answer) >= 100:
+        async with state.proxy() as data:
+            data["essay"] = answer
+        # to be sure
+        await message.answer(text=f"<b>Your entered  Essay:</b>\n\n\"<i>{answer}</i>\"\n\n"
+                                  "<b>Click next to continue or resend text:</b>", reply_markup=check_text_ess)
+        # next state
+        await CollectInfoEss.Essay_state.set()
+    else:
+        await message.answer(text="It's not a Essay. Resend again.")
 
 
 async def essay_body_handler(callback_query: CallbackQuery, state: FSMContext):
@@ -60,12 +64,16 @@ async def essay_body_handler(callback_query: CallbackQuery, state: FSMContext):
     type1 = data.get('type')
     topic = data.get('topic')
     essay = data.get('essay')
+    words = len(str(essay).split())
+    paragraphs = len(str(essay).split('\n\n'))
     # answer
     await callback_query.message.answer(text=f'<b>✅You\'ve finished polls successfully!</b>',
                                         reply_markup=ReplyKeyboardRemove())
     await callback_query.message.answer(text=f"<b>📌 Type:</b> \"<i>{type1}</i>\"\n"
-                                        f"\n<b>❔ Question:</b> \"<i>{topic}</i>\"\n"
-                                        f"\n<b>📜 Essay:</b> \"<i>{essay}</i>\"\n",
+                                             f"\n<b>❔ Question:</b> \"<i>{topic}</i>\"\n"
+                                             f"\n<b>📜 Essay:</b> \"<i>{essay}</i>\"\n"
+                                             f"\n<b>🧮 Total words: <i>{words}</i>"
+                                             f" | Paragraphs: <i>{paragraphs}</i></b>",
                                         reply_markup=finish_inline)
     await CollectInfoEss.Last_state.set()
 

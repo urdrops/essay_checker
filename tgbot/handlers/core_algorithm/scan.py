@@ -1,8 +1,13 @@
+import asyncio
+import re
+
 from aiogram import Dispatcher
-from aiogram.types import CallbackQuery
 from aiogram.dispatcher import FSMContext
-from tgbot.misc.states import CollectInfoEss
+from aiogram.types import CallbackQuery
+
 from tgbot.keyboards.inline import check_scan
+from tgbot.misc.states import CollectInfoEss
+from tgbot.services.scaner import scanning
 
 
 # to detect which photo need to scan
@@ -19,11 +24,27 @@ async def scan_photo(callback_query: CallbackQuery, state: FSMContext):
     # Analyze answer photo
     await callback_query.message.delete()
     data = await state.get_data()
-    photo_url = data.get("photo_url")
-    stick_wait = await callback_query.message.answer_sticker(sticker="CAACAgIAAxkBAAEKAtNk2RRMD5jbBuNqtQaH2BvimRZ6BwACJRYAAh9BoEmSDZPG0WhzIjAE")
+    photo_url: str = data.get("photo_url")
+    sticker = "CAACAgIAAxkBAAEKAtNk2RRMD5jbBuNqtQaH2BvimRZ6BwACJRYAAh9BoEmSDZPG0WhzIjAE"
+    stick_wait = await callback_query.message.answer_sticker(
+        sticker=sticker)
     wait = await callback_query.message.answer(text="Just a sec.. I'm scaninng..")
-    answer = "scanned text"#scanning(photo_url)
+
+
+
+
+    # getting result
+    data_task = asyncio.create_task(scanning(photo_url))
+    answer: str = await data_task
+
+
+
+    answer: str = re.sub(pattern=r'(?<!\.)\n', repl=' ', string=answer)
+    answer: str = re.sub(pattern=r'\n', repl='\n\n', string=answer)
+    answer: str = re.sub(pattern=r' +', repl=' ', string=answer)
+
     await callback_query.message.answer(text=answer)
+    # clear waiting messages
     await stick_wait.delete()
     await wait.delete()
 
@@ -41,7 +62,7 @@ async def check_scan_no(callback_query: CallbackQuery, state: FSMContext):
     data = await state.get_data()
     current_state = await state.get_state()
     answer = data.get(find_state_data(current_state))
-    await callback_query.message.answer(text=f"`{answer}`\n\n\nCopy text and rewrite correcting scanner errors:",
+    await callback_query.message.answer(text=f"`{answer}`\n\n\n💾 Copy text and rewrite correcting scanner errors:",
                                         parse_mode="MARKDOWN")
     await CollectInfoEss.next()
 

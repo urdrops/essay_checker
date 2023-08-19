@@ -3,10 +3,10 @@ import logging
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.fsm_storage.redis import RedisStorage2
-
+# load config
 from tgbot.config import load_config
 # cycle of polling
-from tgbot.handlers.start import register_start_user
+from tgbot.handlers.analyze import register_start_user
 from tgbot.handlers.core_algorithm.essay_type import register_start_collect
 from tgbot.handlers.core_algorithm.essay_topic import register_essay_topic
 from tgbot.handlers.core_algorithm.essay_body import register_essay
