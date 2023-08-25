@@ -14,3 +14,4 @@ class CollectInfoEss(StatesGroup):
     next_text_essay_state = State()
     # last state
     Last_state = State()
+    Bestv_state = State()

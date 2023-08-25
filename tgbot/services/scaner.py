@@ -1,4 +1,6 @@
+import aiohttp
 import requests
+
 from tgbot.config import load_config
 
 
@@ -10,17 +12,17 @@ async def scanning(url_photo: str):
         'X-RapidAPI-Host': 'pen-to-print-handwriting-ocr.p.rapidapi.com',
     }
 
-    data = {
-        'Session': 'string',
-    }
-    img = requests.get(url_photo)
-    files = {
-        'srcImg': img.content,
-    }
+    data = aiohttp.FormData()
+    data.add_field(name='Session', value='string')
 
-    try:
-        response = requests.post(url, headers=headers, data=data, files=files)
-        answer = response.json()
-        return answer['value']
-    except requests.exceptions.RequestException as error:
-        return str(error)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url_photo) as img_response:
+            img_content = await img_response.read()
+            data.add_field(name='srcImg', value=img_content, content_type='image/jpeg', filename='image.jpg')
+
+            try:
+                async with session.post(url, headers=headers, data=data) as response:
+                    answer = await response.json()
+                    return answer['value']
+            except aiohttp.ClientError as error:
+                return str(error)

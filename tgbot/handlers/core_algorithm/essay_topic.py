@@ -10,13 +10,13 @@ async def scan_inline_topic(callback_query: CallbackQuery):
     await callback_query.message.answer_video(
         video="BAACAgIAAxkBAAIYXWTZB8eebfgI82hc_9BNGkcYnGxOAALvMwAC1lzISuM8j32ADkzUMAQ",
         caption='⬆️<b> Illustration </b>⬆️'
-                '\nSubmit your <i>QUESTION</i> as per these rules!\n\n'
-                '<b>📋Rules:\n'
+                '\nSubmit your <i>QUESTION</i> according to these rules!\n\n'
+                '<b>📋Rules:'
                 "\n• <u>One photo - one QUESTION</u>"
                 "\n• <u>The photo should be vertical</u>"
                 "\n• <u>Only the QIESTION should be on the photo, no other texts</u>"
                 "\n• <u>Photo quality should be normal and readable\n\n</u></b>"         
-                "<b>💡Advice:</b>\n"
+                "<b>💡Advice:</b>"
                 "\n•<i> Without any strikethrough text</i>",
         reply_markup=ReplyKeyboardRemove())
     # delete previous callback

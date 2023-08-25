@@ -19,10 +19,9 @@ async def result_handler(callback_query: CallbackQuery, state: FSMContext):
     info: dict = {"type": data.get('type'),
                   "topic": data.get('topic'),
                   "essay": data.get('essay')}
-
     # return result
-    data_result: str = await analyzes(info['type'], info['topic'], info['essay'])
-
+    new_task = asyncio.create_task(analyzes(info['type'], info['topic'], info['essay']))
+    data_result = await new_task
     # to avoid too long message error
     if len(data_result) >= 4010:
         a = 4008  # minus 2 from limit
@@ -34,7 +33,6 @@ async def result_handler(callback_query: CallbackQuery, state: FSMContext):
         await callback_query.message.answer(text=data_result[a + 1:])
     else:
         await callback_query.message.answer(text=data_result)
-
     # clear waiting notification
     await stick_wait.delete()
     await wait.delete()

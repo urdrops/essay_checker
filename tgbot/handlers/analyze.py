@@ -12,11 +12,11 @@ async def start_user(message: Message, state: FSMContext):
     await state.reset_state()  # RESET STATES
     # QUESTION FOR TYPE_ESSAY
     await message.answer(text="<b>Let\'s start analyzing your essay! 🔍</b>"
-                              "\nFirst, I need to gather data about the essay such as these:\n"
-                              "\n📌 <b>Type of essay</b>"
-                              "\n❔ <b>The question of the essay</b>"
-                              "\n📜 <b>The essay</b> ")
-    await message.answer(text="<b>Choose what TYPE OF ESSAY you have:</b>", reply_markup=menu)
+                              "\nFirst, I'll gather data about the essay such as:\n"
+                              "\n📌 <b>The type of exam</b>"
+                              "\n❔ <b>The topic or question of the essay</b>"
+                              "\n📜 <b>The content of the essay</b> ")
+    await message.answer(text="<b>Please indicate the EXAM TYPE of your essay:</b>", reply_markup=menu)
     await CollectInfoEss.Type_essay_state.set()
 
 

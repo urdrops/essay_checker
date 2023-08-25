@@ -10,13 +10,13 @@ async def scan_inline_essay(callback_query: CallbackQuery):
     await callback_query.message.answer_video(
         video="BAACAgIAAxkBAAIYXWTZB8eebfgI82hc_9BNGkcYnGxOAALvMwAC1lzISuM8j32ADkzUMAQ",
         caption="⬆<b> Illustration </b>⬆"
-                '\n"Submit your <i>ESSAY</i> as per these rules!"\n\n'
-                '<b>📋Rules:\n'
+                '\nSubmit your <i>ESSAY</i> according to these rules!\n\n'
+                '<b>📋Rules:'
                 "\n• One photo - one ESSAY"
                 "\n• The photo should be vertical"
                 "\n• Only the ESSAY should be on the photo, no other texts"
                 "\n• Photo quality should be normal and readable\n\n</b>"
-                "<b>💡Advice:</b>\n"
+                "<b>💡Advice:</b>"
                 "\n• <i>Preferably your essay should be clean and on a white sheet</i>"
                 "\n• <i>Without any strikethrough text</i>",
         reply_markup=ReplyKeyboardRemove())

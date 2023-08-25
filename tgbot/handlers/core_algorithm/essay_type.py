@@ -18,7 +18,7 @@ async def essay_type_handler(message: Message, state: FSMContext):
     # question for topic essay
     await message.answer_video(video="BAACAgIAAxkBAAIWNWTYxsY2-z8sJNfqL1fpTNMsl81GAAIqMQAC1lzISj6BdA60x97sMAQ",
                                caption="⬆<b> Illustration </b>⬆\n"
-                                       'Now, please provide <b>the QUESTION</b> of your writing essay.\n\n'
+                                       'Now, please provide <b>the QUESTION | TOPIC</b> of your writing essay.\n\n'
                                        "We offer two text upload options:\n"
                                        "<i>• Paste the text\n• Scan text from a photo</i>"
                                        '\n\n<b>Enter your text:</b>',
@@ -26,7 +26,7 @@ async def essay_type_handler(message: Message, state: FSMContext):
     await CollectInfoEss.Topic_state.set()
 
 
-async def motiv_handler(message: Message, state: FSMContext):
+async def coming_soon(message: Message, state: FSMContext):
     # analyze answer motiv letter
     await message.answer(text='Coming soon..', reply_markup=back)
     # end state
@@ -34,8 +34,8 @@ async def motiv_handler(message: Message, state: FSMContext):
 
 
 def register_start_collect(dp: Dispatcher):
-    dp.register_message_handler(essay_type_handler, text="IELTS (writing task 2)",
+    dp.register_message_handler(essay_type_handler, text="IELTS Writing Task 2",
                                 state=CollectInfoEss.Type_essay_state)
-    dp.register_message_handler(essay_type_handler, text="TOEFL (writing task)", state=CollectInfoEss.Type_essay_state)
-    dp.register_message_handler(essay_type_handler, text="Essays | CEFR", state=CollectInfoEss.Type_essay_state)
-    dp.register_message_handler(motiv_handler, text="Motivation letter", state=CollectInfoEss.Type_essay_state)
+    dp.register_message_handler(coming_soon, text="TOEFL Integrated Writing Task", state=CollectInfoEss.Type_essay_state)
+    dp.register_message_handler(essay_type_handler, text="CEFR proficiency test", state=CollectInfoEss.Type_essay_state)
+    dp.register_message_handler(coming_soon, text="Motivation letter", state=CollectInfoEss.Type_essay_state)
