@@ -2,6 +2,7 @@ from aiogram import Dispatcher
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.dispatcher import FSMContext
 from tgbot.keyboards.inline import scan_ess, check_text_top, check_photo_top
+from tgbot.middlewares.throttling import rate_limit
 from tgbot.misc.states import CollectInfoEss
 
 
@@ -15,7 +16,7 @@ async def scan_inline_topic(callback_query: CallbackQuery):
                 "\n• <u>One photo - one QUESTION</u>"
                 "\n• <u>The photo should be vertical</u>"
                 "\n• <u>Only the QIESTION should be on the photo, no other texts</u>"
-                "\n• <u>Photo quality should be normal and readable\n\n</u></b>"         
+                "\n• <u>Photo quality should be normal and readable\n\n</u></b>"
                 "<b>💡Advice:</b>"
                 "\n•<i> Without any strikethrough text</i>",
         reply_markup=ReplyKeyboardRemove())
@@ -25,6 +26,7 @@ async def scan_inline_topic(callback_query: CallbackQuery):
     await CollectInfoEss.Scan_Topic_state.set()
 
 
+@rate_limit(limit=5, key='photo')
 async def scan_photo_topic(message: Message, state: FSMContext):
     # get photo and save
     photo = message.photo[-1]

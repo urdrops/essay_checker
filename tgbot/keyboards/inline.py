@@ -5,6 +5,10 @@ scan_top = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="📝 Scan by photo", callback_data="scan_inline_cbT")],
 ]
 )
+bestv = InlineKeyboardMarkup(inline_keyboard=[
+    [InlineKeyboardButton(text="Best version", callback_data="bestv_cb")],
+]
+)
 check_photo_top = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton(text="Next", callback_data="next_photo_inline_cbT"),
      InlineKeyboardButton(text="Resend", callback_data="againT")],

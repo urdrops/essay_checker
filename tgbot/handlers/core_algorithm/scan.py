@@ -8,6 +8,7 @@ from aiogram.types import CallbackQuery
 from tgbot.keyboards.inline import check_scan
 from tgbot.misc.states import CollectInfoEss
 from tgbot.services.scaner import scanning
+from tgbot.middlewares.throttling import rate_limit
 
 
 # to detect which photo need to scan
@@ -30,14 +31,9 @@ async def scan_photo(callback_query: CallbackQuery, state: FSMContext):
         sticker=sticker)
     wait = await callback_query.message.answer(text="Just a sec.. I'm scaninng..")
 
-
-
-
     # getting result
     data_task = asyncio.create_task(scanning(photo_url))
-    answer: str = await data_task
-
-
+    answer: str = await data_task if await data_task else "No text in photo("
 
     answer: str = re.sub(pattern=r'(?<!\.)\n', repl=' ', string=answer)
     answer: str = re.sub(pattern=r'\n', repl='\n\n', string=answer)

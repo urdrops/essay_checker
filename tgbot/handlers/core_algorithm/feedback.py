@@ -7,6 +7,8 @@ async def get_feedback(callback_query: CallbackQuery):
     await callback_query.message.delete()
     await callback_query.message.answer(text='Thanks for the feedback!' 
                                              '\nClick [/analyze] to analyze more!')
+    sticker = "CAACAgIAAxkBAAEKLhhk8ItgZSZJ9GW8QFUq-aPozye3-AACPBUAAj2ToUnfWaXumnFGITAE"
+    await callback_query.message.answer_sticker(sticker=sticker)
 
 
 # register feedback

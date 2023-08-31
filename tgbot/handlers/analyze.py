@@ -5,6 +5,7 @@ from aiogram import Dispatcher
 from aiogram.types import Message
 from aiogram.dispatcher import FSMContext
 from tgbot.keyboards.reply import menu
+from tgbot.middlewares.throttling import rate_limit
 from tgbot.misc.states import CollectInfoEss
 
 

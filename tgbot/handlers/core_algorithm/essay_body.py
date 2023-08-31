@@ -1,6 +1,8 @@
 from aiogram import Dispatcher
 from aiogram.types import Message, ReplyKeyboardRemove, CallbackQuery
 from aiogram.dispatcher import FSMContext
+
+from tgbot.middlewares.throttling import rate_limit
 from tgbot.misc.states import CollectInfoEss
 from tgbot.keyboards.inline import check_text_ess, check_photo_ess, finish_inline
 
@@ -25,6 +27,7 @@ async def scan_inline_essay(callback_query: CallbackQuery):
     await CollectInfoEss.Scan_Essay_state.set()
 
 
+@rate_limit(limit=5, key='photo')
 async def scan_photo_essay(message: Message, state: FSMContext):
     # analyze and save photo to scan
     photo = message.photo[-1]

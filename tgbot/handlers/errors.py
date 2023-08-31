@@ -2,13 +2,15 @@ from aiogram import Dispatcher
 from aiogram.types import Message, Update, CallbackQuery
 import logging
 
+from tgbot.middlewares.throttling import rate_limit
+
 
 async def errors_handler(update: Update, exception: Exception):
-    from aiogram.utils import (Unauthorized, InvalidQueryID, TelegramAPIError,
-                               MessageNotModified, MessageToDeleteNotFound,
-                               MessageTextIsEmpty,
-                               RetryAfter, CantParseEntities,
-                               MessageCantBeDeleted, BadRequest)
+    from aiogram.utils.exceptions import (Unauthorized, InvalidQueryID, TelegramAPIError,
+                                          MessageNotModified, MessageToDeleteNotFound,
+                                          MessageTextIsEmpty,
+                                          RetryAfter, CantParseEntities,
+                                          MessageCantBeDeleted, BadRequest)
     if isinstance(exception, Unauthorized):
         updt = update.get_current()
         logging.debug(f"error: Unauthorized \n{updt}")
@@ -46,6 +48,7 @@ async def errors_handler(update: Update, exception: Exception):
         return True
 
 
+@rate_limit(limit=5, key='error_message')
 # if no handlers
 async def error_handler(message: Message):
     await message.answer(text="There's no such option")

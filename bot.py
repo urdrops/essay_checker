@@ -16,13 +16,15 @@ from tgbot.handlers.core_algorithm.feedback import register_get_feedback
 from tgbot.handlers.core_algorithm.result import register_result_handler
 # commands
 from tgbot.handlers.help import register_instruction_handler
+# middleware
+from tgbot.middlewares.throttling import ThrottlingMiddleware
 
 
 logger = logging.getLogger(__name__)
 
 
 def register_all_middlewares(dp, config):
-    pass
+    dp.middleware.setup(ThrottlingMiddleware())
 
 
 def register_all_filters(dp):
@@ -52,7 +54,6 @@ async def main():
     logger.info("Starting bot")
 
     config = load_config(".env")
-
     storage = RedisStorage2() if config.tg_bot.use_redis else MemoryStorage()
     bot = Bot(token=config.tg_bot.token, parse_mode="HTML")
     dp = Dispatcher(bot, storage=storage)
@@ -69,7 +70,6 @@ async def main():
         await dp.storage.close()
         await dp.storage.wait_closed()
         await bot.session.close()
-
 
 if __name__ == "__main__":
     try:
